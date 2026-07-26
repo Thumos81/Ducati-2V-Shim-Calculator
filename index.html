@@ -766,11 +766,11 @@
       if(!raw) return;
       const data = JSON.parse(raw);
       if(data.meta){
-        if(data.meta.bikeModel) document.getElementById('bikeModel').value = data.meta.bikeModel;
-        if(data.meta.odometer) document.getElementById('odometer').value = data.meta.odometer;
-        if(data.meta.odoUnit) document.getElementById('odoUnit').value = data.meta.odoUnit;
-        if(data.meta.jobDate) document.getElementById('jobDate').value = data.meta.jobDate;
-        if(data.meta.mechanic) document.getElementById('mechanic').value = data.meta.mechanic;
+        if(data.meta.bikeModel !== undefined) document.getElementById('bikeModel').value = data.meta.bikeModel;
+        if(data.meta.odometer !== undefined) document.getElementById('odometer').value = data.meta.odometer;
+        if(data.meta.odoUnit !== undefined) document.getElementById('odoUnit').value = data.meta.odoUnit;
+        if(data.meta.jobDate !== undefined) document.getElementById('jobDate').value = data.meta.jobDate;
+        if(data.meta.mechanic !== undefined) document.getElementById('mechanic').value = data.meta.mechanic;
         if(data.meta.goalOpener) {
           goals.Opener = parseFloat(data.meta.goalOpener);
           document.getElementById('goalOpener').value = goals.Opener.toFixed(2);
@@ -795,9 +795,11 @@
     } catch(e) { console.warn('LocalStorage load failed', e); }
   }
 
-  // Wire job input persistence
+  // Wire job input persistence (listens to both input and change events)
   ['bikeModel', 'odometer', 'odoUnit', 'jobDate', 'mechanic'].forEach(id => {
-    document.getElementById(id).addEventListener('input', saveToLocalStorage);
+    const el = document.getElementById(id);
+    el.addEventListener('input', saveToLocalStorage);
+    el.addEventListener('change', saveToLocalStorage);
   });
 
   // ---------- adjustable goals ----------
@@ -900,6 +902,8 @@
     document.getElementById('bikeModel').value = '';
     document.getElementById('mechanic').value = '';
     document.getElementById('jobDate').value = '';
+    document.getElementById('odometer').value = '';
+    document.getElementById('odoUnit').value = 'mi';
     goals.Opener = 0.10; goals.Closer = 0.10;
     document.getElementById('goalOpener').value = '0.10';
     document.getElementById('goalCloser').value = '0.10';
